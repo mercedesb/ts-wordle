@@ -11,6 +11,13 @@ export function Attempt() {
   const inputRefs = [firstLetterRef, secondLetterRef, thirdLetterRef, fourthLetterRef, fifthLetterRef]
 
   const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const isLetter = (event.key >= "a" && event.key <= "z");
+    const isArrow = event.key.match(/arrow/i);
+    if (isLetter) moveFocusToNextLetter(event);
+    if (isArrow) moveFocusToCorrectLetter(event);
+  }
+
+  const moveFocusToNextLetter = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const currentRefIndex = inputRefs.findIndex(ref => ref.current === event.target);
     if (currentRefIndex < inputRefs.length - 1) {
       const nextFocusRef = inputRefs[currentRefIndex + 1];
@@ -18,6 +25,24 @@ export function Attempt() {
         nextFocusRef.current.focus();
       }
     }
+  }
+
+  const moveFocusToPrevLetter = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const currentRefIndex = inputRefs.findIndex(ref => ref.current === event.target);
+    if (currentRefIndex > 0) {
+      const prevFocusRef = inputRefs[currentRefIndex - 1];
+      if (prevFocusRef.current) {
+        prevFocusRef.current.focus();
+      }
+    }
+  }
+
+  const moveFocusToCorrectLetter = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const moveNext = event.key === 'ArrowRight' || event.key === 'ArrowDown'
+    const movePrev = event.key === 'ArrowLeft' || event.key === 'ArrowUp'
+
+    if (moveNext) moveFocusToNextLetter(event)
+    else if (movePrev) moveFocusToPrevLetter(event)
   }
 
 return (
