@@ -1,22 +1,34 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
+import { InputProps } from "./types";
 
-export function Letter({label, inputRef, handleKeyUp}: {label: string, inputRef: React.RefObject<HTMLInputElement>, handleKeyUp: (event: React.KeyboardEvent<HTMLInputElement>) => void }) {
-  const [value, setValue] = useState('')
+export function Letter({
+  inputProps,
+  handleKeyUp,
+}: {
+  inputProps: InputProps;
+  handleKeyUp: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+}) {
+  const [value, setValue] = useState("");
+  const { className, label, disabled, inputRef } = inputProps;
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value)
-  }
-  
+    // only allow a single letter per input
+    const lastLetter = event.target.value.slice(-1);
+    setValue(lastLetter);
+  };
+
   return (
     <label>
       <span className="sr-only">{label} letter</span>
-      <input 
+      <input
         onKeyUp={handleKeyUp}
         onChange={onChange}
         ref={inputRef}
         value={value}
-        type="text" 
-        className="border border-gray-400 w-8 mx-1 rounded" />
+        disabled={disabled}
+        type="text"
+        className={`border border-gray-400 w-8 mx-1 rounded text-center font-bold uppercase ${className}`}
+      />
     </label>
-  )
+  );
 }
